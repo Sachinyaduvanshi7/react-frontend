@@ -12,6 +12,7 @@ phases:
   pre_build:
     commands:
       - echo Updating kubeconfig for EKS cluster...
+      - kubectl get nodes
       - aws eks --region ap-south-1 update-kubeconfig --name Cluster-2
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 597088043946.dkr.ecr.ap-south-1.amazonaws.com
