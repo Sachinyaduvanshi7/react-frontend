@@ -12,7 +12,6 @@ phases:
   pre_build:
     commands:
       - echo Updating kubeconfig for EKS cluster...
-      - kubectl get nodes
       - aws eks --region ap-south-1 update-kubeconfig --name Cluster-2
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 597088043946.dkr.ecr.ap-south-1.amazonaws.com
@@ -33,6 +32,7 @@ phases:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Updating Kubernetes deployment with the new image...
+      - kubectl get all
       - kubectl set image deployment/react-frontend-deployment react-frontend=$REPOSITORY_URI:$IMAGE_TAG
 
 artifacts:
