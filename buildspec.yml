@@ -8,13 +8,16 @@ phases:
       - chmod +x ./kubectl
       - sudo cp ./kubectl /usr/local/bin
       - export PATH=/usr/local/bin:$PATH
-      - aws eks --region ap-south-1 update-kubeconfig --name Cluster-2
+
   pre_build:
     commands:
+      - echo Updating kubeconfig for EKS cluster...
+      - aws eks --region ap-south-1 update-kubeconfig --name Cluster-2
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 597088043946.dkr.ecr.ap-south-1.amazonaws.com
       - REPOSITORY_URI=597088043946.dkr.ecr.ap-south-1.amazonaws.com/react-front
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+
   build:
     commands:
       - echo Installing Node.js dependencies...
@@ -22,13 +25,15 @@ phases:
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+
   post_build:
     commands:
       - echo Pushing the Docker image to ECR...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Updating Kubernetes deployment with the new image...
-      - kubectl set image deployment/react-frontend-deployment react-frontend=$REPOSITORY_URI:$IMAGE_TAG --record
+      - kubectl set image deployment/react-frontend-deployment react-frontend=$REPOSITORY_URI:$IMAGE_TAG
+
 artifacts:
   files:
     - react-deployment.yaml
