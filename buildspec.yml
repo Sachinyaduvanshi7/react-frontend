@@ -28,11 +28,13 @@ phases:
 
   post_build:
     commands:
+      - echo Verifying connection to the EKS cluster...
+      - aws eks --region ap-south-1 update-kubeconfig --name Cluster-2
+      - kubectl get nodes
       - echo Pushing the Docker image to ECR...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Updating Kubernetes deployment with the new image...
-      - kubectl version
       - kubectl set image deployment/react-frontend-deployment react-frontend=$REPOSITORY_URI:$IMAGE_TAG
 
 artifacts:
