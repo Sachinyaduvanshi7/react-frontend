@@ -3,16 +3,16 @@ version: 0.2
 phases:
   install:
     commands:
-      # - echo Installing kubectl...
-      # - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.24.11/2023-03-17/bin/linux/amd64/kubectl
-      # - chmod +x ./kubectl
-      # - sudo cp ./kubectl /usr/local/bin
-      # - export PATH=/usr/local/bin:$PATH
+      - echo Installing kubectl...
+      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.24.11/2023-03-17/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl
+      - sudo cp ./kubectl /usr/local/bin
+      - export PATH=/usr/local/bin:$PATH
 
   pre_build:
     commands:
       - echo Updating kubeconfig for EKS cluster...
-      - aws eks --region ap-south-1 update-kubeconfig --name Cluster-2
+      - aws eks --region ap-south-1 update-kubeconfig --name Cluster-Demo
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 597088043946.dkr.ecr.ap-south-1.amazonaws.com
       - REPOSITORY_URI=597088043946.dkr.ecr.ap-south-1.amazonaws.com/react-front
