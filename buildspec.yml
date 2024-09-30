@@ -31,7 +31,7 @@ phases:
       - echo Verifying connection to the EKS cluster...
       - aws eks --region ap-south-1 update-kubeconfig --name Cluster-Demo
       - kubectl version
-      - kubectl get nodes
+      -  # kubectl get nodes
       - echo Pushing the Docker image to ECR...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
