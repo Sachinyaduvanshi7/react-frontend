@@ -29,7 +29,7 @@ phases:
   post_build:
     commands:
       - echo Verifying connection to the EKS cluster...
-      - aws eks --region ap-south-1 update-kubeconfig --name Cluster-2
+      - aws eks --region ap-south-1 update-kubeconfig --name Cluster-Demo
       - kubectl get nodes
       - echo Pushing the Docker image to ECR...
       - docker push $REPOSITORY_URI:latest
