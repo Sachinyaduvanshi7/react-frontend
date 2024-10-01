@@ -1,42 +1,22 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      - echo Installing kubectl...
-      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.24.11/2023-03-17/bin/linux/amd64/kubectl
-      - chmod +x ./kubectl
-      - sudo cp ./kubectl /usr/local/bin
-      - export PATH=/usr/local/bin:$PATH
-
   pre_build:
     commands:
-      - echo Updating kubeconfig for EKS cluster...
-      - aws eks --region ap-south-1 update-kubeconfig --name Cluster-Demo
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 597088043946.dkr.ecr.ap-south-1.amazonaws.com
-      - REPOSITORY_URI=597088043946.dkr.ecr.ap-south-1.amazonaws.com/react-front
-      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
-
+      - $(aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 597088043946.dkr.ecr.ap-south-1.amazonaws.com)
   build:
     commands:
-      - echo Installing Node.js dependencies...
-      - npm install
+      - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
-
+      - docker build -t react-front .
+      - docker tag react-front:latest 597088043946.dkr.ecr.ap-south-1.amazonaws.com/react-front:latest
   post_build:
     commands:
-      - echo Verifying connection to the EKS cluster...
-      - aws eks --region ap-south-1 update-kubeconfig --name Cluster-Demo
-      - kubectl version
-      - echo Pushing the Docker image to ECR...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo Updating Kubernetes deployment with the new image...
-      - kubectl set image deployment/react-frontend-deployment react-frontend=$REPOSITORY_URI:$IMAGE_TAG
-
+      - echo Pushing the Docker image...
+      - docker push 597088043946.dkr.ecr.ap-south-1.amazonaws.com/react-front:latest
+      - echo Writing image definition file...
+      - printf '[{"name":"react-app","imageUri":"%s"}]' 597088043946.dkr.ecr.ap-south-1.amazonaws.com/react-front:latest > imagedefinitions.json
 artifacts:
   files:
-    - react-deployment.yaml
+    - imagedefinitions.json
