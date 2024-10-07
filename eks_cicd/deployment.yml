@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: react-front
+    app.kubernetes.io/instance: react-front-instance
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: kubectl
+  name: react-front-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: react-front
+  template:
+    metadata:
+      labels:
+        app: react-front
+    spec:
+      containers:
+        - image: 597088043946.dkr.ecr.ap-south-1.amazonaws.com/react-front:latest
+          imagePullPolicy: Always
+          name: react-front
+          ports:
+            - containerPort: 3000
