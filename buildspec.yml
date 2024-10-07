@@ -37,4 +37,4 @@ phases:
       - echo Deploying to EKS...
       - kubectl get nodes
       - kubectl apply -f eks_cicd/deployment.yml
-      - kubectl rollout restart deployment/$YOUR_DEPLOYMENT_NAME # Restart your deployment
+      - kubectl rollout restart deployment/react-front-deployment # Restart your deployment
