@@ -28,7 +28,7 @@ function Home() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello from AWS EKS-HELLO-TEST</p>
+        <p>Hello from AWS EKS-HELLO-TEST-1</p>
       </header>
     </div>
   );
