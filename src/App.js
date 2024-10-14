@@ -28,7 +28,7 @@ function Home() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello from AWS EKS USING CI-CD PIPELINE</p>
+        <p>Hello from AWS EKS USING CI-CD PIPELINE - 1</p>
       </header>
     </div>
   );
